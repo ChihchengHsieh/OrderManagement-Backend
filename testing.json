@@ -1,0 +1,10 @@
+{
+    "name": "newProduct",
+    "quantity": 3,
+    "buyPriceAUD": 20,
+    "sellPrice": 15,
+    "seller": "yh",
+    "paid": true,
+    "bought": false,
+    "received": false
+}

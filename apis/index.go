@@ -7,7 +7,8 @@ import (
 func InitRouter() *gin.Engine {
 	router := gin.Default()
 
-	OrderApiInit(router)
+	// OrderApiInit(router)
+	MemberApiInit(router)
 
 	return router
 }

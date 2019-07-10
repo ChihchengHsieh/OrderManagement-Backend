@@ -1,8 +1,8 @@
 package main
 
 import (
+	"orderFunc/apis"
 	"orderFunc/databases"
-	"orderFunc/testFunc"
 
 	_ "github.com/joho/godotenv/autoload"
 )
@@ -10,13 +10,13 @@ import (
 func main() {
 	databases.InitDB()
 
-	// router := apis.InitRouter()
+	router := apis.InitRouter()
 
-	testFunc.AllTestingRun()
+	// testFunc.AllTestingRun()
 
 	// models.UpdateMemberByID()
 
-	// router.Run()
+	router.Run()
 	// type testingStruct struct {
 	// 	FieldA string
 	// 	FieldB string
