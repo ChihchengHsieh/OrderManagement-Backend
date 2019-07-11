@@ -77,19 +77,30 @@ func MemberApiInit(router *gin.Engine) {
 		})
 
 		// Update a memeber
-		memberRouter.POST("/:uid", func(c *gin.Context) {
+		memberRouter.PUT("/:uid", func(c *gin.Context) {
 
-			memberAcceoptFields := []string{"name", "remark"}
-
-			updateingField := bson.M{}
-
-			for _, f := range memberAcceoptFields {
-				if k := c.PostForm(f); k != "" {
-					updateingField[f] = k
-				}
+			updateJSON := c.PostForm("member")
+			var updateMember map[string]interface{}
+			err := json.Unmarshal([]byte(updateJSON), &updateMember)
+			if err != nil {
+				c.JSON(http.StatusInternalServerError, gin.H{
+					"error": err,
+					"msg":   "Cannot Unmarshal the input",
+				})
+				return
 			}
 
-			upsertID, err := models.UpdateMemberByID(c.Param("uid"), bson.M{"$set": updateingField})
+			// memberAcceoptFields := []string{"name", "remark"}
+
+			// updateingField := bson.M{}
+
+			// for _, f := range memberAcceoptFields {
+			// 	if k := c.PostForm(f); k != "" {
+			// 		updateingField[f] = k
+			// 	}
+			// }
+
+			upsertID, err := models.UpdateMemberByID(c.Param("uid"), bson.M{"$set": updateMember})
 
 			if err != nil {
 				c.JSON(http.StatusInternalServerError, gin.H{
@@ -100,7 +111,7 @@ func MemberApiInit(router *gin.Engine) {
 			}
 
 			c.JSON(http.StatusOK, gin.H{
-				"updatingFields": updateingField,
+				"updatingFields": updateMember,
 				"upsertID":       upsertID,
 			})
 
@@ -152,7 +163,9 @@ func MemberApiInit(router *gin.Engine) {
 				if err != nil {
 					c.JSON(http.StatusInternalServerError, gin.H{
 						"error": err,
+						"msg":   "Cannot add the product properly",
 					})
+					return
 				}
 
 				c.JSON(http.StatusOK, gin.H{
@@ -185,10 +198,10 @@ func MemberApiInit(router *gin.Engine) {
 				}
 
 				c.JSON(http.StatusOK, gin.H{
-					"upsertID":      upsertID,
-					"productID":     c.Param("pid"),
-					"userID":        c.Param("uid"),
-					"updatedFields": updateProduct,
+					"upsertID":       upsertID,
+					"productID":      c.Param("pid"),
+					"userID":         c.Param("uid"),
+					"updatedProduct": updateProduct,
 				})
 
 			})

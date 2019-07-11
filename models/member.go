@@ -2,6 +2,7 @@ package models
 
 import (
 	"context"
+	"log"
 	"orderFunc/databases"
 	"time"
 
@@ -23,6 +24,7 @@ type Product struct {
 	BuyPriceAUD  float32            `json:"buyPriceAUD" bson:"buyPriceAUD"`
 	SellPriceTWD float32            `json:"sellPriceTWD" bson:"sellPriceTWD"`
 	Seller       string             `jsonp:"seller" bson:"seller"`
+	OrderNum     int                `json:"orderNum" bson:"orderNum"`
 	Paid         bool               `json:"paid" bson:"paid"`
 	Bought       bool               `json:"bought" bson:"bought"`
 	Received     bool               `json:"received" bson:"received"`
@@ -107,12 +109,14 @@ func FindMembers(filterDetail bson.M) ([]*Member, error) {
 func AddProductToMemberByID(id string, inputProduct map[string]interface{}) (interface{}, error) {
 	oid, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
+		log.Printf("transfering ID problem")
 		return nil, err
 	}
 	result, err := databases.DB.Collection("member").UpdateOne(context.TODO(),
 		bson.M{"_id": oid},
 		bson.M{"$push": bson.M{"products": inputProduct}})
 	if err != nil {
+		log.Printf("fail to add the the member")
 		return nil, err
 	}
 	return result.UpsertedID, nil
