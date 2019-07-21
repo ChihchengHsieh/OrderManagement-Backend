@@ -4,19 +4,20 @@ import (
 	"orderFunc/apis"
 	"orderFunc/databases"
 
+	"github.com/gin-gonic/gin"
 	_ "github.com/joho/godotenv/autoload"
 )
 
 func main() {
+	gin.ForceConsoleColor()
 	databases.InitDB()
-
 	router := apis.InitRouter()
+	router.Run()
 
 	// testFunc.AllTestingRun()
 
 	// models.UpdateMemberByID()
 
-	router.Run()
 	// type testingStruct struct {
 	// 	FieldA string
 	// 	FieldB string

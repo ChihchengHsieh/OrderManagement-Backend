@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"orderFunc/middlewares"
 	"orderFunc/models"
 	"time"
 
@@ -27,6 +28,7 @@ type Order struct {
 
 func OrderApiInit(router *gin.Engine) {
 	orderRouter := router.Group("/order")
+	orderRouter.Use(middlewares.LoginAuth())
 	{
 		// Adding Comment
 		orderRouter.POST("/", func(c *gin.Context) {

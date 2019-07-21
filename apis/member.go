@@ -3,6 +3,7 @@ package apis
 import (
 	"encoding/json"
 	"net/http"
+	"orderFunc/middlewares"
 	"orderFunc/models"
 	"time"
 
@@ -14,9 +15,11 @@ import (
 
 func MemberApiInit(router *gin.Engine) {
 	memberRouter := router.Group("/member")
+	memberRouter.Use(middlewares.LoginAuth())
 	{
 		// Get all the members
 		memberRouter.GET("/", func(c *gin.Context) {
+
 			members, err := models.FindMembers(bson.M{})
 
 			if err != nil {
@@ -30,6 +33,7 @@ func MemberApiInit(router *gin.Engine) {
 			c.JSON(http.StatusOK, gin.H{
 				"members": members,
 			})
+
 		})
 
 		// Get Single member
@@ -151,6 +155,7 @@ func MemberApiInit(router *gin.Engine) {
 				if err != nil {
 					c.JSON(http.StatusInternalServerError, gin.H{
 						"error": err,
+						"msg":   "Cannot get the product",
 					})
 					return
 				}
