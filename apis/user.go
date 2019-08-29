@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"orderFunc/models"
 	"orderFunc/utils"
+	"os"
 
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"golang.org/x/crypto/bcrypt"
@@ -23,16 +24,16 @@ func UserApiInit(router *gin.Engine) {
 
 			var role string
 
-			if !(code == "ck14" || code == "showAa!1018") {
+			if !(code == os.Getenv("REGISTER_CODE") || code == os.Getenv("ADMIN_REGISTER_CODE")) {
 				c.JSON(http.StatusUnauthorized, gin.H{
 					"error": "The register code is not correct",
 					"msg":   "The register code is not correct",
 				})
 				return
 			} else {
-				if code == "ck14" {
+				if code == os.Getenv("REGISTER_CODE") {
 					role = "normal"
-				} else if code == "showAa!1018" {
+				} else if code == os.Getenv("ADMIN_REGISTER_CODE") {
 					role = "admin"
 				}
 			}
@@ -78,7 +79,7 @@ func UserApiInit(router *gin.Engine) {
 			}
 
 			registerUser.ID = insertID.(primitive.ObjectID)
-			authToken, err := utils.GenerateAuthToken(c.PostForm("email"))
+			authToken, err := utils.GenerateAuthToken(registerUser.ID.Hex())
 
 			if err != nil {
 				c.JSON(http.StatusInternalServerError, gin.H{
@@ -129,7 +130,7 @@ func UserApiInit(router *gin.Engine) {
 				return
 			}
 
-			authToken, err := utils.GenerateAuthToken(inputEmail)
+			authToken, err := utils.GenerateAuthToken(user.ID.Hex())
 
 			if err != nil {
 				c.JSON(http.StatusInternalServerError, gin.H{

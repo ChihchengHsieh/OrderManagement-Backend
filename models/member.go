@@ -6,6 +6,8 @@ import (
 	"orderFunc/databases"
 	"time"
 
+	"go.mongodb.org/mongo-driver/mongo/options"
+
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
@@ -85,9 +87,9 @@ func FindMemberByID(id string) (*Member, error) {
 	return &member, nil
 }
 
-func FindMembers(filterDetail bson.M) ([]*Member, error) {
+func FindMembers(filterDetail bson.M, findOptions *options.FindOptions) ([]*Member, error) {
 	var members []*Member
-	result, err := databases.DB.Collection("member").Find(context.TODO(), filterDetail)
+	result, err := databases.DB.Collection("member").Find(context.TODO(), filterDetail, findOptions)
 	defer result.Close(context.TODO())
 
 	if err != nil {

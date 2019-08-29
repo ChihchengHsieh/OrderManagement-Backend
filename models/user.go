@@ -73,7 +73,7 @@ func FindUserByEmail(email string) (interface{}, error) {
 }
 
 // CheckingTheAuth - if the user is returned, then the auth is valid
-func CheckingTheAuth(email string, password string) (interface{}, error) {
+func CheckingTheAuth(email string, password string) (*User, error) {
 	var user User
 	err := databases.DB.Collection("user").FindOne(context.TODO(), bson.M{"email": email}).Decode(&user)
 
@@ -82,7 +82,7 @@ func CheckingTheAuth(email string, password string) (interface{}, error) {
 	if err != nil {
 		return nil, err
 	}
-	return user, nil
+	return &user, nil
 }
 
 // FindUsers - this function will get multiple users without the password field

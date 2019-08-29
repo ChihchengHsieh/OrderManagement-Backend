@@ -6,12 +6,13 @@ import (
 	"github.com/dgrijalva/jwt-go"
 )
 
-func GenerateAuthToken(email string) (interface{}, error) {
+// GenerateAuthToken - Generate the Auth token for given id
+func GenerateAuthToken(id string) (interface{}, error) {
 	/*
 		Method for generating the token
 	*/
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-		"email": email,
+		"_id": id,
 		// "exp":   time.Now().Add(time.Hour * 2).Unix(),
 	})
 

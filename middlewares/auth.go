@@ -52,8 +52,8 @@ func LoginAuth() gin.HandlerFunc {
 		// Find the User and store in c
 
 		claims := token.Claims.(jwt.MapClaims)
-
-		user, err := models.FindUserByEmail(claims["email"].(string))
+		inputClaim := claims["_id"].(string)
+		user, err := models.FindUserByID(inputClaim)
 
 		if err != nil {
 			log.Print(err)
